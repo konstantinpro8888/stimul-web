@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Диагностика — STIMUL</title>
+</head>
+<body style="font-family: Arial; text-align: center; padding: 40px;">
+
+  <h1>Диагностика состояния</h1>
+
+  <p>
+    Покажет, где у вас уходит ресурс<br/>
+    и почему становится тяжелее даже в простых задачах
+  </p>
+
+  <br/>
+
+  <input placeholder="Ваш email" style="padding:10px; width:250px;" />
+  <br/><br/>
+
+  <button onclick="start()">Начать</button>
+
+  <div id="app" style="margin-top:40px;"></div>
+
+  <script>
+    const questions = [
+      "Как проходит день?",
+      "После отдыха становится легче?",
+      "Когда задач много — что происходит?"
+    ]
+
+    let step = 0
+
+    function start() {
+      render()
+    }
+
+    function answer() {
+      step++
+      if (step < questions.length) {
+        render()
+      } else {
+        document.getElementById('app').innerHTML = "Готово. Отправим результат на почту."
+      }
+    }
+
+    function render() {
+      document.getElementById('app').innerHTML = `
+        <p>${questions[step]}</p>
+        <button onclick="answer()">вариант 1</button><br/><br/>
+        <button onclick="answer()">вариант 2</button><br/><br/>
+        <button onclick="answer()">вариант 3</button>
+      `
+    }
+  </script>
+
+</body>
+</html>
