@@ -3,54 +3,153 @@
 <head>
   <meta charset="UTF-8" />
   <title>Диагностика — STIMUL</title>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 60px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin-top: 20px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      border-radius: 10px;
+      border: none;
+      background: black;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .option {
+      background: #f0f0f0;
+      color: black;
+    }
+
+    .option:hover {
+      background: #e5e5e5;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align: center; padding: 40px;">
 
-  <h1>Диагностика состояния</h1>
+<body>
 
-  <p>
-    Покажет, где у вас уходит ресурс<br/>
-    и почему становится тяжелее даже в простых задачах
-  </p>
+  <div class="container">
 
-  <br/>
+    <h1>Диагностика состояния</h1>
 
-  <input placeholder="Ваш email" style="padding:10px; width:250px;" />
-  <br/><br/>
+    <p>
+      Покажет, где у вас уходит ресурс<br/>
+      и почему становится тяжелее даже в простых задачах
+    </p>
 
-  <button onclick="start()">Начать</button>
+    <input id="email" placeholder="Ваш email" />
 
-  <div id="app" style="margin-top:40px;"></div>
+    <button onclick="start()">Начать</button>
+
+    <div id="app"></div>
+
+  </div>
 
   <script>
     const questions = [
-      "Как проходит день?",
-      "После отдыха становится легче?",
-      "Когда задач много — что происходит?"
+      {
+        text: "Как проходит ваш день?",
+        options: [
+          "Держусь, но к концу дня выжат",
+          "Бывают провалы и потеря фокуса",
+          "В целом стабильно и спокойно"
+        ]
+      },
+      {
+        text: "После отдыха становится легче?",
+        options: [
+          "Нет, состояние быстро возвращается",
+          "Иногда помогает, но ненадолго",
+          "Да, восстанавливаюсь нормально"
+        ]
+      },
+      {
+        text: "Когда задач много — что происходит?",
+        options: [
+          "Начинаю давить на себя и устаю",
+          "Теряюсь и переключаюсь",
+          "Спокойно расставляю приоритеты"
+        ]
+      }
     ]
 
     let step = 0
+    let answers = []
 
     function start() {
       render()
     }
 
-    function answer() {
+    function answer(value) {
+      answers.push(value)
       step++
+
       if (step < questions.length) {
         render()
       } else {
-        document.getElementById('app').innerHTML = "Готово. Отправим результат на почту."
+        finish()
       }
     }
 
     function render() {
+      const q = questions[step]
+
       document.getElementById('app').innerHTML = `
-        <p>${questions[step]}</p>
-        <button onclick="answer()">вариант 1</button><br/><br/>
-        <button onclick="answer()">вариант 2</button><br/><br/>
-        <button onclick="answer()">вариант 3</button>
+        <h3>${q.text}</h3>
+        <button class="option" onclick="answer(1)">${q.options[0]}</button>
+        <button class="option" onclick="answer(2)">${q.options[1]}</button>
+        <button class="option" onclick="answer(3)">${q.options[2]}</button>
       `
+    }
+
+    function finish() {
+      const email = document.getElementById('email').value
+
+      document.getElementById('app').innerHTML = `
+        <p>Готово. Отправим результат на почту.</p>
+      `
+
+      console.log({ email, answers })
     }
   </script>
 
